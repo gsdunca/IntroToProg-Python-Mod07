@@ -9,7 +9,6 @@
 # ------------------------------------------------------------------------------------------ #
 import json
 
-
 # Define the Data Constants
 MENU: str = '''
 ---- Course Registration Program ----
@@ -20,89 +19,87 @@ MENU: str = '''
     4. Exit the program.
 ----------------------------------------- 
 '''
-FILE_NAME: str = "../Assignment/Enrollments.json"
+FILE_NAME: str = "Enrollments.json"
 
 # Define the Data Variables
 students: list = []  # a table of student data
-menu_choice: str  # Hold the choice made by the user.
-
+# menu_choice: str  # Hold the choice made by the user.
+menu_choice:str = ''
 
 # TODO Create a Person Class
 class Person:
     """
-    A class representing person data.
+       A class representing person data.
 
-    Properties:
-        first_name (str): The student's first name.
-        last_name (str): The student's last name.
+       Properties:
+           first_name (str): The student's first name.
+           last_name (str): The student's last name.
 
-    ChangeLog:
-        - RRoot, 1.1.2030: Created the class.
-        - SDuncan,11/24/24: Reused and Modified class from Mod07 Lab03
-    """
+       ChangeLog:
+           - RRoot, 1.1.2030: Created the class.
+           - SDuncan,11/25/24: reused and changed data from Mod07 Lab03
+       """
 
-# TODO Add first_name and last_name properties to the constructor (Done)
+    #TODO Add first_name and last_name properties to the constructor (Done)
     def __init__(self, first_name: str = '', last_name: str = ''):
         self.first_name = first_name
         self.last_name = last_name
-
 # TODO Create a getter and setter for the first_name property (Done)
-    @property
+    @property  # (Use this decorator for the getter or accessor)
     def first_name(self):
-        return self.__first_name.title()  # Formating: First letter will be upper case
-
-    @first_name.setter # Sets the attributes for first_name
+        return self.__first_name.title()  # formatting code
+    @first_name.setter
     def first_name(self, value: str):
         if value.isalpha() or value == "":  # is character or empty string
             self.__first_name = value
         else:
-            raise ValueError("The name should only be Alphabetical")
+            raise ValueError("The name should not contain numbers or special characters.")
 
 # TODO Create a getter and setter for the last_name property (Done)
     @property
     def last_name(self):
         return self.__last_name.title()  # formatting code
 
-    @last_name.setter # setting the attributes for last_name
+    @last_name.setter
     def last_name(self, value: str):
         if value.isalpha() or value == "":  # is character or empty string
             self.__last_name = value
         else:
-            raise ValueError("The name should only be Alphabetical")
+            raise ValueError("The name should not contain numbers.")
 
 # TODO Override the __str__() method to return Person data (Done)
     def __str__(self):
         return f'{self.first_name},{self.last_name}'
 
 # TODO Create a Student class the inherits from the Person class (Done)
-class Student(Person): # Student is a "Subclass" of Person
+class Student(Person):
     """
     A class representing student data.
 
     Properties:
         first_name (str): The student's first name.
         last_name (str): The student's last name.
-
+        gpa (float): The gpa of the student.
 
     ChangeLog: (Who, When, What)
     RRoot,1.1.2030,Created Class
     RRoot,1.3.2030,Added properties and private attributes
     RRoot,1.3.2030,Moved first_name and last_name into a parent class
-    SDuncan,11/24/24, Reused and modified from Mod07 Lab03 Replaced GPA with Course Variable
+    SDuncan,11/25/24: reused and changed data from Mod07 Lab03
     """
+
 # TODO call to the Person constructor and pass it the first_name and last_name data (Done)
     def __init__(self, first_name: str = '', last_name: str = '', course_name: str = ''):
         super().__init__(first_name=first_name, last_name=last_name)
 
 # TODO add a assignment to the course_name property using the course_name parameter (Done)
         self.course = course_name
-
 # TODO add the getter for course_name (Done)
     @property
     def course(self):
-        return self.__course_name.title() #Formatting: Course will begin with Capital letter in name
+        return self.__course_name.title()
 
-# TODO add the setter for course_name (Done)
+    # TODO add the setter for course_name (Done)
     @course.setter
     def course(self, value: str):
         self.__course_name = value
@@ -120,6 +117,7 @@ class FileProcessor:
 
     ChangeLog: (Who, When, What)
     RRoot,1.1.2030,Created Class
+     - SDuncan,11/25/24: reused and changed data from Mod07 Lab03
     """
     @staticmethod
     def read_data_from_file(file_name: str, student_data: list):
@@ -130,21 +128,12 @@ class FileProcessor:
 
         :param file_name: string data with name of file to read from
         :param student_data: list of dictionary rows to be filled with file data
+        - SDuncan,11/25/24: reused and changed data from Mod07 Lab03
 
         :return: list
         """
 
-        # try:
-        #     file = open(file_name, "r")
-        #     student_data = json.load(file)
-        #     file.close()
-        # except Exception as e:
-        #     IO.output_error_messages(message="Error: There was a problem with reading the file.", error=e)
-        #
-        # finally:
-        #     if not file.closed: #Julian Peterson review on Mod05 suggested the use of this code
-        #         file.close()
-        # return student_data
+
         try:
             file = open(file_name, "r")
 
@@ -164,31 +153,21 @@ class FileProcessor:
             if file.closed == False:
                 file.close()
         return student_data
+
     @staticmethod
     def write_data_to_file(file_name: str, student_data: list):
         """ This function writes data to a json file with data from a list of dictionary rows
 
         ChangeLog: (Who, When, What)
         RRoot,1.1.2030,Created function
+         - SDuncan,11/25/24: reused and changed data from Mod07 Lab03
 
         :param file_name: string data with name of file to write to
         :param student_data: list of dictionary rows to be writen to the file
+        :param student.course: references the course set in the student class
 
         :return: None
         """
-
-        # try:
-        #     file = open(file_name, "w")
-        #     json.dump(student_data, file)
-        #     file.close()
-        #     IO.output_student_and_course_names(student_data=student_data)
-        # except Exception as e:
-        #     message = "Error: There was a problem with writing to the file.\n"
-        #     message += "Please check that the file is not open by another program."
-        #     IO.output_error_messages(message=message,error=e)
-        # finally:
-        #     if file.closed == False:
-        #         file.close()
 
         try:
             list_of_dictionary_data: list = []
@@ -217,17 +196,19 @@ class IO:
     RRoot,1.2.2030,Added menu output and input functions
     RRoot,1.3.2030,Added a function to display the data
     RRoot,1.4.2030,Added a function to display custom error messages
+     - SDuncan,11/25/24: reused and changed data from Mod07 Lab03
     """
 
     @staticmethod
     def output_error_messages(message: str, error: Exception = None):
-        """ This function displays the a custom error messages to the user
+        """ This function displays a custom error messages to the user
 
         ChangeLog: (Who, When, What)
         RRoot,1.3.2030,Created function
 
         :param message: string with message data to display
         :param error: Exception object with technical message to display
+
 
         :return: None
         """
@@ -263,36 +244,42 @@ class IO:
         try:
             choice = input("Enter your menu choice number: ")
             if choice not in ("1","2","3","4"):  # Note these are strings
-                raise Exception("Please, choose only 1, 2, 3, or 4")
+                raise Exception("Please, choose only 1, 2, 3, or 4 to END the program")
         except Exception as e:
             IO.output_error_messages(e.__str__())  # Not passing e to avoid the technical message
+            return choice
+        # try:
+        #     choice = input("Enter your menu choice number: ")
+        #     if choice not in ("1","2","3","4"):  # Note these are strings
+        #         raise Exception("Please, choose only 1, 2, 3, or 4")
+        # except Exception as e:
+        #     IO.output_error_messages(e.__str__())  # Not passing e to avoid the technical message
 
         return choice
 
     @staticmethod
     def output_student_and_course_names(student_data: list):
-
         """ This function displays the student and course names to the user
 
         ChangeLog: (Who, When, What)
         RRoot,1.1.2030,Created function
 
         :param student_data: list of dictionary rows to be displayed
+         - SDuncan,11/25/24: reused and changed data from Mod07 Lab03
+        :param student.course: used to reference course name in student class
 
         :return: None
         """
 
-        #TODO Clearn this up
+        print()
         print("-" * 50)
-        for student in student_data:
-            message = " Student {} {} is registered for {} "
-            print(message.format(student.first_name, student.last_name, student.course))
 
+        for student in student_data:
+                message = " Student {} {} is registered for {} "
+                print(message.format(student.first_name, student.last_name, student.course))
         print("-" * 50)
-        # print()
-        #     print(f'Student {student["FirstName"]} '
-        #           f'{student["LastName"]} is enrolled in {student["CourseName"]}')
-        print("-" * 50)
+        print()
+
 
     @staticmethod
     def input_student_data(student_data: list):
@@ -302,34 +289,32 @@ class IO:
         RRoot,1.1.2030,Created function
 
         :param student_data: list of dictionary rows to be filled with input data
+        - SDuncan,11/25/24: reused and changed data from Mod07 Lab03
 
         :return: list
         """
 
         try:
+            # Input the data
             student = Student()
-            student.first_name = input("Enter the student's first name: ")
+            student.first_name = input("What is the student's first name? ")
             if not student.first_name.isalpha():
                 raise ValueError("The last name should not contain numbers.")
-            student.last_name = input("Enter the student's last name: ")
+            student.last_name = input("What is the student's last name? ")
             if not student.last_name.isalpha():
                 raise ValueError("The last name should not contain numbers.")
-            course_name = input("Please enter the name of the course: ")
-            #TODO add error check making the course name mandatory field
-
-            student = {"FirstName": student.first_name,
-                            "LastName": student.last_name,
-                            "CourseName": course_name}
-            student_data.append(student)
+            student.course = str(input("What is the student's course? "))
             print()
-            print(f"You have registered {student.first_name} {student.last_name} for {course_name}.")
+            print(f"You have registered {student.first_name} {student.last_name} for {student.course}.")
+            student_data.append(student)
+
         except ValueError as e:
-            IO.output_error_messages(message="One of the values was the correct type of data!", error=e)
+            IO.output_error_messages("That value is not the correct type of data!", e)
         except Exception as e:
-            IO.output_error_messages(message="Error: There was a problem with your entered data.", error=e)
+            IO.output_error_messages("There was a non-specific error!", e)
         return student_data
 
-
+#  End of function definitions
 # Start of main body
 
 # When the program starts, read the file data into a list of lists (table)
@@ -352,6 +337,7 @@ while (True):
     # Present the current data
     elif menu_choice == "2":
         IO.output_student_and_course_names(students)
+        continue
 
     # Save the data to a file
     elif menu_choice == "3":
@@ -362,6 +348,6 @@ while (True):
     elif menu_choice == "4":
         break  # out of the loop
     else:
-        print("Please only choose option 1, 2, or 3")
+        print("Please only choose from the list")
 
 print("Program Ended")
